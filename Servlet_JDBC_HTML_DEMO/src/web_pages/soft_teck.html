@@ -1,0 +1,499 @@
+```html
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>טכנולוגיות בהנדסת תוכנה</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f6f8;
+            color: #333;
+        }
+
+        header {
+            background-color: #1f4e79;
+            color: white;
+            padding: 35px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+
+        header p {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        nav {
+            background-color: #163a5c;
+            padding: 12px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .intro {
+            background-color: white;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .category {
+            background-color: white;
+            margin-bottom: 20px;
+            padding: 20px 25px;
+            border-radius: 8px;
+            border-right: 5px solid #1f4e79;
+        }
+
+        .category h2 {
+            color: #1f4e79;
+            margin-top: 0;
+        }
+
+        .technologies {
+            line-height: 1.9;
+        }
+
+        .learning-path {
+            background-color: #e8f1f8;
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 35px;
+        }
+
+        .path {
+            direction: ltr;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            line-height: 2;
+        }
+
+        footer {
+            background-color: #163a5c;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>טכנולוגיות בהנדסת תוכנה</h1>
+    <p>Software Engineering Technologies</p>
+</header>
+
+<nav>
+    <a href="#programming">שפות תכנות</a>
+    <a href="#web">פיתוח Web</a>
+    <a href="#databases">מסדי נתונים</a>
+    <a href="#devops">DevOps</a>
+    <a href="#architecture">ארכיטקטורה</a>
+</nav>
+
+<main>
+
+    <section class="intro">
+        <h2>מבוא</h2>
+
+        <p>
+            עולם הנדסת התוכנה מורכב ממגוון רחב של טכנולוגיות,
+            שפות תכנות, מסדי נתונים, כלי פיתוח, Frameworks,
+            שרתים ושירותי ענן.
+        </p>
+
+        <p>
+            מהנדס תוכנה אינו נדרש להכיר לעומק את כל הטכנולוגיות,
+            אך חשוב להבין את הקטגוריות המרכזיות ואת הקשרים ביניהן.
+        </p>
+    </section>
+
+
+    <section class="category" id="programming">
+        <h2>1. שפות תכנות</h2>
+
+        <div class="technologies">
+            Java, C#, Python, C, C++, JavaScript,
+            TypeScript, PHP, Kotlin, Swift, Go, Rust
+        </div>
+    </section>
+
+
+    <section class="category" id="web">
+        <h2>2. Frontend – צד לקוח</h2>
+
+        <p>
+            טכנולוגיות המשמשות לבניית ממשק המשתמש בדפדפן.
+        </p>
+
+        <div class="technologies">
+            HTML5, CSS3, JavaScript, TypeScript,
+            React, Angular, Vue.js, Bootstrap, Tailwind CSS
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>3. Backend – צד שרת</h2>
+
+        <p>
+            טכנולוגיות המשמשות לבניית הלוגיקה של האפליקציה
+            בצד השרת.
+        </p>
+
+        <div class="technologies">
+            Java Servlets, JSP, Spring Boot,
+            ASP.NET Core, Node.js, Express,
+            Django, Flask, PHP / Laravel
+        </div>
+    </section>
+
+
+    <section class="category" id="databases">
+        <h2>4. מסדי נתונים רלציוניים – SQL</h2>
+
+        <div class="technologies">
+            MySQL, PostgreSQL, Microsoft SQL Server,
+            Oracle Database, SQLite, Microsoft Access
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>5. מסדי נתונים NoSQL</h2>
+
+        <div class="technologies">
+            MongoDB, Redis, Cassandra,
+            Firebase / Firestore, Elasticsearch
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>6. גישה למסדי נתונים ו־ORM</h2>
+
+        <div class="technologies">
+            JDBC, JPA, Hibernate,
+            Entity Framework, Prisma, Sequelize
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>7. Web Servers ו־Application Servers</h2>
+
+        <div class="technologies">
+            Apache Tomcat, Apache HTTP Server,
+            Nginx, Microsoft IIS
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>8. APIs ותקשורת בין מערכות</h2>
+
+        <div class="technologies">
+            REST API, HTTP / HTTPS, JSON, XML,
+            SOAP, GraphQL, WebSocket, gRPC
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>9. סביבות וכלי פיתוח</h2>
+
+        <div class="technologies">
+            IntelliJ IDEA, Eclipse,
+            Visual Studio Code, Visual Studio,
+            Android Studio
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>10. ניהול גרסאות</h2>
+
+        <div class="technologies">
+            Git, GitHub, GitLab, Bitbucket
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>11. Build & Dependency Management</h2>
+
+        <div class="technologies">
+            Maven, Gradle, npm, Yarn, pnpm
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>12. בדיקות תוכנה</h2>
+
+        <div class="technologies">
+            JUnit, Mockito, Selenium,
+            Cypress, Playwright, Postman
+        </div>
+    </section>
+
+
+    <section class="category" id="devops">
+        <h2>13. DevOps ו־CI/CD</h2>
+
+        <div class="technologies">
+            GitHub Actions, GitLab CI/CD,
+            Jenkins, Azure DevOps
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>14. Containers</h2>
+
+        <div class="technologies">
+            Docker, Docker Compose, Podman
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>15. Orchestration</h2>
+
+        <div class="technologies">
+            Kubernetes, Helm
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>16. Cloud Computing</h2>
+
+        <div class="technologies">
+            Amazon Web Services (AWS),
+            Microsoft Azure,
+            Google Cloud Platform (GCP),
+            Firebase
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>17. מערכות הפעלה וסביבות שרת</h2>
+
+        <div class="technologies">
+            Linux, Windows, Windows Server,
+            Bash, PowerShell
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>18. רשתות ופרוטוקולים</h2>
+
+        <div class="technologies">
+            TCP/IP, DNS, HTTP/HTTPS,
+            SSH, FTP/SFTP, SMTP, WebSocket
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>19. אבטחת תוכנה</h2>
+
+        <div class="technologies">
+            Authentication, Authorization,
+            OAuth 2.0, OpenID Connect,
+            JWT, TLS/SSL, Hashing, OWASP
+        </div>
+    </section>
+
+
+    <section class="category" id="architecture">
+        <h2>20. ארכיטקטורת תוכנה</h2>
+
+        <div class="technologies">
+            Layered Architecture, MVC,
+            Client-Server, Monolith,
+            Microservices, Event-Driven Architecture,
+            Clean Architecture
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>21. Design Patterns</h2>
+
+        <div class="technologies">
+            Singleton, Factory, Builder,
+            Observer, Strategy, Repository,
+            Dependency Injection
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>22. מתודולוגיות פיתוח</h2>
+
+        <div class="technologies">
+            Agile, Scrum, Kanban,
+            Waterfall, TDD, BDD
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>23. ניתוח ותכנון מערכות</h2>
+
+        <div class="technologies">
+            UML, Use Case Diagram,
+            Class Diagram, Sequence Diagram,
+            ERD, Requirements Analysis
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>24. Messaging ומערכות מבוזרות</h2>
+
+        <div class="technologies">
+            RabbitMQ, Apache Kafka, MQTT
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>25. פיתוח Mobile</h2>
+
+        <div class="technologies">
+            Android, Kotlin, Java,
+            iOS, Swift, Flutter, React Native
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>26. פיתוח Desktop</h2>
+
+        <div class="technologies">
+            JavaFX, Swing,
+            .NET / WPF, WinForms, Electron
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>27. בינה מלאכותית בפיתוח תוכנה</h2>
+
+        <div class="technologies">
+            LLMs, OpenAI API,
+            Hugging Face, LangChain,
+            RAG, Vector Databases
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>28. כלי AI למפתחי תוכנה</h2>
+
+        <div class="technologies">
+            ChatGPT, GitHub Copilot,
+            Cursor, Claude Code
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>29. Infrastructure as Code</h2>
+
+        <div class="technologies">
+            Terraform, Ansible, Pulumi
+        </div>
+    </section>
+
+
+    <section class="category">
+        <h2>30. Monitoring & Observability</h2>
+
+        <div class="technologies">
+            Prometheus, Grafana,
+            OpenTelemetry, ELK Stack
+        </div>
+    </section>
+
+
+    <section class="learning-path">
+
+        <h2>מסלול הלימוד שלנו</h2>
+
+        <p>
+            במהלך הקורס נתקדם בהדרגה מתכנות Java בסיסי
+            אל בניית אפליקציות Web המחוברות למסד נתונים.
+        </p>
+
+        <div class="path">
+            Java
+            &rarr;
+            JDBC
+            &rarr;
+            MySQL
+            &rarr;
+            Tomcat
+            &rarr;
+            Servlet
+            &rarr;
+            JSP
+            &rarr;
+            HTML / CSS
+            &rarr;
+            HTTP
+            &rarr;
+            MVC
+            &rarr;
+            Spring Boot
+            &rarr;
+            REST API
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+    טכנולוגיות בהנדסת תוכנה
+</footer>
+
+</body>
+
+</html>
+```

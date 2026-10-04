@@ -1,0 +1,11 @@
+/Dependecies/
+*.class
+*.war
+out/
+editor-out/
+target/
+*.log
+.env
+.env.*
+!.env.example
+*.local.properties
