@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java 21 + MySQL + JDBC + Tomcat Servlets - To-Do List Tutorial</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#5c667a;--accent:#1f5fbf;--border:#dbe2ee;--code:#111827}
+*{box-sizing:border-box} body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.62}
+header{background:linear-gradient(135deg,#163d77,#1f5fbf);color:#fff;padding:42px 24px}
+header .wrap,main{max-width:1100px;margin:auto} h1{margin:0 0 10px;font-size:2.15rem}.subtitle{font-size:1.08rem;opacity:.95}
+main{padding:28px 18px 70px} section,.toc,.summary{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px;margin-bottom:22px;box-shadow:0 3px 14px rgba(16,24,40,.04)}
+h2{color:#143f7a;border-bottom:2px solid #e8edf5;padding-bottom:8px;margin-top:0} h3{color:#174f96;margin-top:28px}
+a{color:var(--accent)} code{font-family:Consolas,"Courier New",monospace} pre{background:var(--code);color:#f8fafc;border-radius:10px;padding:16px;overflow:auto;line-height:1.45}
+.note,.warning,.success{padding:13px 16px;border-left:5px solid;border-radius:7px;margin:16px 0}.note{background:#eff6ff;border-color:#3b82f6}.warning{background:#fff7ed;border-color:#f97316}.success{background:#ecfdf5;border-color:#10b981}
+table{border-collapse:collapse;width:100%;margin:16px 0} th,td{border:1px solid var(--border);padding:10px;text-align:left;vertical-align:top} th{background:#f0f4f9}
+.toc ol{columns:2;column-gap:38px}.file{font-weight:700;color:#0f766e}.footer{color:var(--muted);text-align:center;margin-top:30px}
+@media(max-width:800px){.toc ol{columns:1}h1{font-size:1.7rem}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>Java 21 + MySQL + JDBC + Tomcat Servlets</h1>
+<div class="subtitle">Complete tutorial: build a simple To-Do List using Java 21, JDBC, MySQL, Tomcat, Servlets and HTML/CSS only - no Spring, no JSP and no Maven required.</div>
+</div></header>
+
+<main>
+
+<section id="course-todo">
+<h2>Course To-Do List</h2>
+<p>Use this checklist as the chapter list for the complete exercise. Mark each task as completed as you progress.</p>
+
+<form>
+<label><input type="checkbox"> 1. Install and configure Java 21</label><br>
+<label><input type="checkbox"> 2. Install and configure VS Code</label><br>
+<label><input type="checkbox"> 3. Download the GitHub course repository</label><br>
+<label><input type="checkbox"> 4. Compile and run JdbcDemo</label><br>
+<label><input type="checkbox"> 5. Install and configure Apache Tomcat</label><br>
+<label><input type="checkbox"> 6. Compile and run ServletDemo</label><br>
+<label><input type="checkbox"> 7. Create the MySQL schema <code>to_do_list</code></label><br>
+<label><input type="checkbox"> 8. Design the static HTML prototype for the To-Do List</label><br>
+<label><input type="checkbox"> 9. Create the final Servlet + JDBC project structure</label><br>
+<label><input type="checkbox"> 10. Create <code>DatabaseConnection.java</code></label><br>
+<label><input type="checkbox"> 11. Create <code>TodoServlet.java</code></label><br>
+<label><input type="checkbox"> 12. Compile the project</label><br>
+<label><input type="checkbox"> 13. Deploy the application to Tomcat</label><br>
+<label><input type="checkbox"> 14. Test Add / Done / Undo / Delete</label><br>
+<label><input type="checkbox"> 15. Understand the complete request flow</label><br>
+<label><input type="checkbox"> 16. Troubleshoot common problems</label><br>
+<label><input type="checkbox"> 17. Complete the student exercises</label><br>
+<label><input type="checkbox"> 18. Upload your final ToDoList JDBC Servlet project to your GitHub repository</label>
+</form>
+
+<div class="note"><strong>Final submission task:</strong> Your completed project should be stored in your own GitHub repository so it can be shared, backed up, and reviewed.</div>
+</section>
+<div class="summary">
+<h2>Project Goal</h2>
+<p>The final web application will let the user view tasks, add a task, mark a task as completed/active, and delete a task. The browser communicates with a Java Servlet over HTTP. The Servlet uses JDBC to read and update MySQL, then generates the HTML response.</p>
+<pre><code>Browser
+   |
+   | HTTP GET / POST
+   v
+Apache Tomcat
+   |
+   v
+TodoServlet
+   |
+   | JDBC
+   v
+MySQL - to_do_list database</code></pre>
+<div class="note"><strong>Target environment:</strong> Windows 11, Java 21, VS Code, MySQL, Apache Tomcat 10.1 and Jakarta Servlets. Tomcat 10+ uses <code>jakarta.servlet.*</code>, not the older <code>javax.servlet.*</code>.</div>
+</div>
+
+<nav class="toc">
+<h2>Contents</h2>
+<ol>
+<li><a href="#java">Java 21 installation and configuration</a></li>
+<li><a href="#vscode">VS Code installation and configuration</a></li>
+<li><a href="#github">Download the GitHub repository</a></li>
+<li><a href="#jdbc">Compile and run JdbcDemo</a></li>
+<li><a href="#tomcat">Tomcat installation and configuration</a></li>
+<li><a href="#servletdemo">Compile and run ServletDemo</a></li>
+<li><a href="#schema">Create MySQL schema to_do_list</a></li>
+<li><a href="#html">Design the HTML prototype</a></li>
+<li><a href="#project">Create the final project</a></li>
+<li><a href="#db">DatabaseConnection.java</a></li>
+<li><a href="#servlet">TodoServlet.java</a></li>
+<li><a href="#compile">Compile</a></li>
+<li><a href="#deploy">Deploy to Tomcat</a></li>
+<li><a href="#flow">Understand the full request flow</a></li>
+<li><a href="#troubleshoot">Troubleshooting</a></li>
+<li><a href="#exercise">Student exercises</a></li>
+<li><a href="#github-final">Create GitHub account and upload final project</a></li>
+</ol>
+</nav>
+
+<section id="java">
+<h2>1. Java 21 Installation and Configuration</h2>
+<h3>1.1 Install JDK 21</h3>
+<p>Install a full JDK 21. A JDK contains both the Java runtime and development tools such as the Java compiler <code>javac</code>.</p>
+<p>A typical installation folder is:</p>
+<pre><code>C:\Program Files\Eclipse Adoptium\jdk-21...</code></pre>
+
+<h3>1.2 Configure JAVA_HOME</h3>
+<ol>
+<li>Search Windows for <strong>Edit the system environment variables</strong>.</li>
+<li>Click <strong>Environment Variables</strong>.</li>
+<li>Create a system variable named <code>JAVA_HOME</code> that points to the JDK folder.</li>
+<li>Edit the system <code>Path</code> and add <code>%JAVA_HOME%\bin</code>.</li>
+</ol>
+<pre><code>JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-21...</code></pre>
+
+<h3>1.3 Verify the installation</h3>
+<p>Open a new Command Prompt and run:</p>
+<pre><code>java -version
+javac -version</code></pre>
+<p>Both should report Java 21.</p>
+<div class="note"><code>javac</code> compiles <code>.java</code> source files into <code>.class</code> bytecode files. <code>java</code> runs compiled Java code.</div>
+</section>
+
+<section id="vscode">
+<h2>2. VS Code Installation and Configuration</h2>
+<ol>
+<li>Install Visual Studio Code.</li>
+<li>Open Extensions with <strong>Ctrl+Shift+X</strong>.</li>
+<li>Install <strong>Extension Pack for Java</strong> by Microsoft.</li>
+<li>Open the Command Palette with <strong>Ctrl+Shift+P</strong>.</li>
+<li>Run <code>Java: Configure Java Runtime</code>.</li>
+<li>Verify JDK 21 is detected.</li>
+</ol>
+<p>Open the course root folder in VS Code:</p>
+<pre><code>C:\Sapir_JavaCourse_14</code></pre>
+<div class="note">A red underline under <code>jakarta.servlet</code> later does not mean Java itself is broken. The Servlet API is not part of the JDK; it comes from Tomcat and must be on the project's classpath.</div>
+</section>
+
+<section id="github">
+<h2>3. Download the GitHub Repository</h2>
+<p>Repository:</p>
+<pre><code>https://github.com/yossefavr/Sapir_JavaCourse_14</code></pre>
+<h3>Using Git</h3>
+<pre><code>cd C:\
+git clone https://github.com/yossefavr/Sapir_JavaCourse_14.git
+cd Sapir_JavaCourse_14</code></pre>
+<h3>Or download ZIP</h3>
+<p>On GitHub choose <strong>Code → Download ZIP</strong>, then extract it to <code>C:\Sapir_JavaCourse_14</code>.</p>
+</section>
+
+<section id="jdbc">
+<h2>4. JDBC - Compile and Run JdbcDemo</h2>
+<p>Before mixing JDBC with Servlets, first prove that plain Java can connect to MySQL.</p>
+<h3>4.1 What JDBC is</h3>
+<p>JDBC means <strong>Java Database Connectivity</strong>. It is the standard Java API for opening a database connection, sending SQL statements, receiving results, and closing database resources.</p>
+
+<h3>4.2 Typical demo structure</h3>
+<pre><code>JdbcDemo/
+├── lib/
+│   └── mysql-connector-j-....jar
+├── src/
+│   └── App.java
+└── out/</code></pre>
+
+<h3>4.3 Compile</h3>
+<pre><code>cd C:\Sapir_JavaCourse_14\JdbcDemo
+javac -cp "lib/*" -d out src\App.java</code></pre>
+
+<p><code>-cp "lib/*"</code> adds the JDBC driver JAR to the compile classpath. <code>-d out</code> puts compiled files in the <code>out</code> directory.</p>
+
+<h3>4.4 Run</h3>
+<pre><code>java -cp "out;lib/*" App</code></pre>
+<p>Windows uses <code>;</code> between classpath entries.</p>
+<div class="success">Do not continue until JdbcDemo connects successfully. This proves Java + MySQL + Connector/J are working independently of Tomcat.</div>
+</section>
+
+<section id="tomcat">
+<h2>5. Tomcat Installation and Configuration</h2>
+<h3>5.1 What Tomcat does</h3>
+<p>Tomcat is a web server and Servlet container. It listens for HTTP requests, finds the mapped Servlet, creates request/response objects, calls methods such as <code>doGet()</code> or <code>doPost()</code>, and returns the response to the browser.</p>
+
+<h3>5.2 Extract Tomcat</h3>
+<p>For this course, keep Tomcat under the dependencies folder, for example:</p>
+<pre><code>C:\Sapir_JavaCourse_14\Dependencies\apache-tomcat-10.1.59</code></pre>
+<p>If your actual Tomcat version is different, replace the version number in the commands.</p>
+
+<h3>5.3 Important directories</h3>
+<table>
+<tr><th>Directory</th><th>Purpose</th></tr>
+<tr><td><code>bin</code></td><td>Startup and shutdown scripts.</td></tr>
+<tr><td><code>lib</code></td><td>Tomcat libraries, including <code>servlet-api.jar</code>.</td></tr>
+<tr><td><code>webapps</code></td><td>Deployed web applications.</td></tr>
+<tr><td><code>logs</code></td><td>Server logs and error information.</td></tr>
+<tr><td><code>conf</code></td><td>Tomcat configuration.</td></tr>
+</table>
+
+<h3>5.4 Use a Batch File to Restart Tomcat</h3>
+<p>For this course, use the following simple batch-file practice instead of manually changing into Tomcat's <code>bin</code> directory each time.</p>
+
+<p>Create a file such as:</p>
+<pre><code>restart_tomcat.bat</code></pre>
+
+<p>Place the following commands inside it:</p>
+
+<pre><code>set "CATALINA_HOME=C:\Sapir_JavaCourse_14\Dependencies\apache-tomcat-10.1.59"
+
+call "%CATALINA_HOME%\bin\shutdown.bat"
+
+call "%CATALINA_HOME%\bin\startup.bat"</code></pre>
+
+<p>This does three things:</p>
+<ol>
+<li><code>CATALINA_HOME</code> stores the location of the Tomcat installation.</li>
+<li><code>shutdown.bat</code> stops Tomcat if it is already running.</li>
+<li><code>startup.bat</code> starts Tomcat again.</li>
+</ol>
+
+<div class="note"><strong>Why use <code>call</code>?</strong> Because <code>shutdown.bat</code> and <code>startup.bat</code> are batch files. Using <code>call</code> lets Windows return to your own batch file after each Tomcat script finishes.</div>
+
+<div class="note"><strong>Why write <code>set "CATALINA_HOME=..."</code> with quotes in this form?</strong> The quotes protect the path without becoming part of the variable value. This is the standard safe Windows batch syntax.</div>
+
+<h3>5.5 Run Tomcat</h3>
+<p>Double-click <code>restart_tomcat.bat</code>, or run it from Command Prompt:</p>
+
+<pre><code>restart_tomcat.bat</code></pre>
+
+<p>Then verify Tomcat in the browser:</p>
+
+<pre><code>http://localhost:8080</code></pre>
+
+<p>When testing the ServletDemo later, open:</p>
+
+<pre><code>http://localhost:8080/ServletDemo/hello?name=Yossef</code></pre>
+
+<p>You should see the Servlet greeting and the server time.</p>
+
+<h3>5.6 Stop Tomcat Only</h3>
+<p>If you want to stop Tomcat without restarting it:</p>
+
+<pre><code>set "CATALINA_HOME=C:\Sapir_JavaCourse_14\Dependencies\apache-tomcat-10.1.59"
+
+call "%CATALINA_HOME%\bin\shutdown.bat"</code></pre>
+</section>
+
+<section id="servletdemo">
+<h2>6. Compile and Run ServletDemo</h2>
+<p>Verify a Servlet works before adding database code.</p>
+
+<h3>6.1 Simple Servlet</h3>
+<pre><code>package demo;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebServlet("/hello")
+public class HelloServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(
+            HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
+
+        String name = request.getParameter("name");
+
+        if (name == null || name.isBlank()) {
+            name = "Guest";
+        }
+
+        response.setContentType("text/plain;charset=UTF-8");
+
+        PrintWriter out = response.getWriter();
+        out.println("Hello, " + name + "!");
+    }
+}</code></pre>
+
+<h3>6.2 Compile with servlet-api.jar</h3>
+<pre><code>javac ^
+  -cp "C:\Sapir_JavaCourse_14\Dependencies\apache-tomcat-10.1.59\lib\servlet-api.jar" ^
+  -d WEB-INF\classes ^
+  src\demo\HelloServlet.java</code></pre>
+
+<h3>6.3 Deploy structure</h3>
+<pre><code>ServletDemo/
+└── WEB-INF/
+    └── classes/
+        └── demo/
+            └── HelloServlet.class</code></pre>
+
+<p>Copy the application folder under Tomcat's <code>webapps</code>, restart Tomcat if needed, then test:</p>
+<pre><code>http://localhost:8080/ServletDemo/hello
+http://localhost:8080/ServletDemo/hello?name=Yossef</code></pre>
+</section>
+
+<section id="schema">
+<h2>7. Set Up MySQL Schema <code>to_do_list</code></h2>
+
+<h3>7.1 Create database</h3>
+<pre><code>CREATE DATABASE to_do_list
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+
+USE to_do_list;</code></pre>
+
+<h3>7.2 Create table</h3>
+<pre><code>CREATE TABLE todo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    completed BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+
+<h3>7.3 Insert sample rows</h3>
+<pre><code>INSERT INTO todo (title) VALUES
+('Install Java 21'),
+('Configure Tomcat'),
+('Build my first Servlet application');</code></pre>
+
+<h3>7.4 Verify</h3>
+<pre><code>SELECT id, title, completed, created_at
+FROM todo
+ORDER BY id DESC;</code></pre>
+
+<h3>7.5 Recommended application user</h3>
+<pre><code>CREATE USER 'todo_app'@'localhost'
+IDENTIFIED BY 'ChangeThisPassword';
+
+GRANT SELECT, INSERT, UPDATE, DELETE
+ON to_do_list.*
+TO 'todo_app'@'localhost';
+
+FLUSH PRIVILEGES;</code></pre>
+<div class="warning">For teaching, using a hard-coded password keeps the first example simple. In a real application, database credentials should not be committed to source code.</div>
+</section>
+
+<section id="html">
+<h2>8. Design the HTML for the To-Do List</h2>
+<p>First build a static prototype. Later the Servlet will generate equivalent HTML dynamically from MySQL data.</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;My To-Do List&lt;/title&gt;
+    &lt;style&gt;
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 760px;
+            margin: 40px auto;
+            background: #f4f6f8;
+        }
+
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .done {
+            text-decoration: line-through;
+            color: #777;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div class="card"&gt;
+    &lt;h1&gt;My To-Do List&lt;/h1&gt;
+
+    &lt;form action="todo" method="post"&gt;
+        &lt;input type="hidden" name="action" value="add"&gt;
+        &lt;input type="text"
+               name="title"
+               placeholder="Enter a new task"
+               required&gt;
+        &lt;button type="submit"&gt;Add&lt;/button&gt;
+    &lt;/form&gt;
+
+    &lt;table&gt;
+        &lt;tr&gt;
+            &lt;th&gt;Done&lt;/th&gt;
+            &lt;th&gt;Task&lt;/th&gt;
+            &lt;th&gt;Delete&lt;/th&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;Done&lt;/td&gt;
+            &lt;td class="done"&gt;Install Java&lt;/td&gt;
+            &lt;td&gt;Delete&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/table&gt;
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<table>
+<tr><th>HTML part</th><th>Meaning</th></tr>
+<tr><td><code>action="todo"</code></td><td>Send the form request to the Servlet mapped to <code>/todo</code>.</td></tr>
+<tr><td><code>method="post"</code></td><td>Use HTTP POST because the request changes database data.</td></tr>
+<tr><td><code>name="title"</code></td><td>The Servlet reads it with <code>request.getParameter("title")</code>.</td></tr>
+<tr><td><code>name="action"</code></td><td>Allows one small Servlet to distinguish add, toggle and delete operations.</td></tr>
+</table>
+</section>
+
+<section id="project">
+<h2>9. Create the Final Project</h2>
+<p>Create:</p>
+<pre><code>C:\Sapir_JavaCourse_14\ServletJdbcTodo</code></pre>
+
+<h3>9.1 Project structure</h3>
+<pre><code>ServletJdbcTodo/
+├── src/
+│   └── demo/
+│       ├── DatabaseConnection.java
+│       └── TodoServlet.java
+├── lib/
+│   └── mysql-connector-j-....jar
+├── index.html
+└── WEB-INF/
+    ├── classes/
+    └── lib/
+        └── mysql-connector-j-....jar</code></pre>
+
+<p>The Connector/J JAR is used in two places in this simple manual workflow:</p>
+<ul>
+<li><code>lib</code> - easy to reference while compiling.</li>
+<li><code>WEB-INF/lib</code> - available to Tomcat at runtime.</li>
+</ul>
+</section>
+
+<section id="db">
+<h2>10. Create <code>DatabaseConnection.java</code></h2>
+<p>File: <span class="file">src\demo\DatabaseConnection.java</span></p>
+
+<pre><code>package demo;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DatabaseConnection {
+
+    private static final String URL =
+            "jdbc:mysql://localhost:3306/to_do_list"
+            + "?useSSL=false"
+            + "&amp;serverTimezone=UTC"
+            + "&amp;allowPublicKeyRetrieval=true";
+
+    private static final String USER = "todo_app";
+    private static final String PASSWORD = "ChangeThisPassword";
+
+    private DatabaseConnection() {
+    }
+
+    public static Connection getConnection()
+            throws SQLException {
+
+        return DriverManager.getConnection(
+                URL, USER, PASSWORD);
+    }
+}</code></pre>
+
+<p>Modern MySQL Connector/J automatically registers itself with JDBC. Normally you do not need to call <code>Class.forName(...)</code>.</p>
+</section>
+
+<section id="servlet">
+<h2>11. Create <code>TodoServlet.java</code></h2>
+<p>File: <span class="file">src\demo\TodoServlet.java</span></p>
+<p>For this first project, one Servlet handles all operations. This keeps the HTTP and JDBC flow visible to students. A later exercise can refactor SQL into a DAO class.</p>
+
+<pre><code>package demo;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebServlet("/todo")
+public class TodoServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
+
+        response.setContentType(
+                "text/html;charset=UTF-8");
+
+        String sql =
+                "SELECT id, title, completed "
+              + "FROM todo "
+              + "ORDER BY id DESC";
+
+        try (
+            Connection connection =
+                    DatabaseConnection.getConnection();
+
+            PreparedStatement statement =
+                    connection.prepareStatement(sql);
+
+            ResultSet resultSet =
+                    statement.executeQuery()
+        ) {
+            PrintWriter out = response.getWriter();
+
+            printPageStart(out);
+            printAddForm(out);
+            printTodoTable(out, resultSet);
+            printPageEnd(out);
+
+        } catch (SQLException e) {
+            throw new ServletException(
+                    "Database error while loading tasks.",
+                    e);
+        }
+    }
+
+    @Override
+    protected void doPost(
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
+
+        String action =
+                request.getParameter("action");
+
+        try {
+            if ("add".equals(action)) {
+                addTodo(request);
+
+            } else if ("toggle".equals(action)) {
+                toggleTodo(request);
+
+            } else if ("delete".equals(action)) {
+                deleteTodo(request);
+            }
+
+        } catch (SQLException |
+                 NumberFormatException e) {
+
+            throw new ServletException(
+                    "Database error while updating tasks.",
+                    e);
+        }
+
+        // Post / Redirect / Get
+        response.sendRedirect(
+                request.getContextPath() + "/todo");
+    }
+
+    private void addTodo(HttpServletRequest request)
+            throws SQLException {
+
+        String title =
+                request.getParameter("title");
+
+        if (title == null || title.isBlank()) {
+            return;
+        }
+
+        String sql =
+                "INSERT INTO todo (title) VALUES (?)";
+
+        try (
+            Connection connection =
+                    DatabaseConnection.getConnection();
+
+            PreparedStatement statement =
+                    connection.prepareStatement(sql)
+        ) {
+            statement.setString(1, title.trim());
+            statement.executeUpdate();
+        }
+    }
+
+    private void toggleTodo(HttpServletRequest request)
+            throws SQLException {
+
+        int id = Integer.parseInt(
+                request.getParameter("id"));
+
+        String sql =
+                "UPDATE todo "
+              + "SET completed = NOT completed "
+              + "WHERE id = ?";
+
+        try (
+            Connection connection =
+                    DatabaseConnection.getConnection();
+
+            PreparedStatement statement =
+                    connection.prepareStatement(sql)
+        ) {
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        }
+    }
+
+    private void deleteTodo(HttpServletRequest request)
+            throws SQLException {
+
+        int id = Integer.parseInt(
+                request.getParameter("id"));
+
+        String sql =
+                "DELETE FROM todo WHERE id = ?";
+
+        try (
+            Connection connection =
+                    DatabaseConnection.getConnection();
+
+            PreparedStatement statement =
+                    connection.prepareStatement(sql)
+        ) {
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        }
+    }
+
+    private void printPageStart(PrintWriter out) {
+
+        out.println("&lt;!DOCTYPE html&gt;");
+        out.println("&lt;html lang='en'&gt;");
+        out.println("&lt;head&gt;");
+        out.println("&lt;meta charset='UTF-8'&gt;");
+
+        out.println(
+            "&lt;meta name='viewport' "
+          + "content='width=device-width, "
+          + "initial-scale=1.0'&gt;");
+
+        out.println(
+            "&lt;title&gt;My To-Do List&lt;/title&gt;");
+
+        out.println("&lt;style&gt;");
+
+        out.println("""
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 760px;
+                margin: 40px auto;
+                padding: 0 16px;
+                background: #f4f6f8;
+            }
+
+            .card {
+                background: white;
+                padding: 24px;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px #ccc;
+            }
+
+            .add-form {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 20px;
+            }
+
+            .add-form input[type=text] {
+                flex: 1;
+                padding: 10px;
+            }
+
+            button {
+                padding: 8px 12px;
+                cursor: pointer;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            th, td {
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+                text-align: left;
+            }
+
+            .done {
+                text-decoration: line-through;
+                color: #777;
+            }
+
+            .inline {
+                display: inline;
+            }
+            """);
+
+        out.println("&lt;/style&gt;");
+        out.println("&lt;/head&gt;");
+        out.println("&lt;body&gt;");
+        out.println("&lt;div class='card'&gt;");
+        out.println("&lt;h1&gt;My To-Do List&lt;/h1&gt;");
+    }
+
+    private void printAddForm(PrintWriter out) {
+
+        out.println("""
+            &lt;form class='add-form'
+                  action='todo'
+                  method='post'&gt;
+
+                &lt;input type='hidden'
+                       name='action'
+                       value='add'&gt;
+
+                &lt;input type='text'
+                       name='title'
+                       placeholder='Enter a new task'
+                       maxlength='255'
+                       required&gt;
+
+                &lt;button type='submit'&gt;
+                    Add
+                &lt;/button&gt;
+            &lt;/form&gt;
+            """);
+    }
+
+    private void printTodoTable(
+            PrintWriter out,
+            ResultSet resultSet)
+            throws SQLException {
+
+        out.println("&lt;table&gt;");
+
+        out.println("""
+            &lt;tr&gt;
+                &lt;th&gt;Status&lt;/th&gt;
+                &lt;th&gt;Task&lt;/th&gt;
+                &lt;th&gt;Delete&lt;/th&gt;
+            &lt;/tr&gt;
+            """);
+
+        while (resultSet.next()) {
+
+            int id =
+                    resultSet.getInt("id");
+
+            String title =
+                    resultSet.getString("title");
+
+            boolean completed =
+                    resultSet.getBoolean("completed");
+
+            String cssClass =
+                    completed ? "done" : "";
+
+            out.println("&lt;tr&gt;");
+
+            // Toggle completed state
+            out.println("&lt;td&gt;");
+
+            out.println(
+                "&lt;form class='inline' "
+              + "action='todo' method='post'&gt;");
+
+            out.println(
+                "&lt;input type='hidden' "
+              + "name='action' "
+              + "value='toggle'&gt;");
+
+            out.println(
+                "&lt;input type='hidden' "
+              + "name='id' value='"
+              + id + "'&gt;");
+
+            out.println(
+                "&lt;button type='submit'&gt;"
+              + (completed ? "Undo" : "Done")
+              + "&lt;/button&gt;");
+
+            out.println("&lt;/form&gt;");
+            out.println("&lt;/td&gt;");
+
+            // Task title
+            out.println(
+                "&lt;td class='" + cssClass + "'&gt;"
+              + escapeHtml(title)
+              + "&lt;/td&gt;");
+
+            // Delete
+            out.println("&lt;td&gt;");
+
+            out.println(
+                "&lt;form class='inline' "
+              + "action='todo' method='post'&gt;");
+
+            out.println(
+                "&lt;input type='hidden' "
+              + "name='action' "
+              + "value='delete'&gt;");
+
+            out.println(
+                "&lt;input type='hidden' "
+              + "name='id' value='"
+              + id + "'&gt;");
+
+            out.println(
+                "&lt;button type='submit'&gt;"
+              + "Delete"
+              + "&lt;/button&gt;");
+
+            out.println("&lt;/form&gt;");
+            out.println("&lt;/td&gt;");
+
+            out.println("&lt;/tr&gt;");
+        }
+
+        out.println("&lt;/table&gt;");
+    }
+
+    private void printPageEnd(PrintWriter out) {
+
+        out.println("&lt;/div&gt;");
+        out.println("&lt;/body&gt;");
+        out.println("&lt;/html&gt;");
+    }
+
+    private String escapeHtml(String text) {
+
+        return text
+                .replace("&amp;", "&amp;amp;")
+                .replace("&lt;", "&amp;lt;")
+                .replace("&gt;", "&amp;gt;")
+                .replace("\"", "&amp;quot;")
+                .replace("'", "&amp;#39;");
+    }
+}</code></pre>
+
+<div class="note"><strong>Java 21 feature:</strong> The <code>"""</code> blocks are Java text blocks. They are useful when writing multi-line HTML/CSS strings.</div>
+
+<h3>11.1 Why <code>PreparedStatement</code>?</h3>
+<p>Do not concatenate user input into SQL:</p>
+<pre><code>// Do not do this:
+String sql =
+    "INSERT INTO todo(title) VALUES ('"
+    + title + "')";</code></pre>
+
+<p>Use placeholders:</p>
+<pre><code>String sql =
+    "INSERT INTO todo (title) VALUES (?)";
+
+PreparedStatement statement =
+    connection.prepareStatement(sql);
+
+statement.setString(1, title);</code></pre>
+
+<p>This handles values correctly and is an essential defense against SQL injection.</p>
+
+<h3>11.2 Why <code>escapeHtml()</code>?</h3>
+<p>A task title comes from the user. Before putting that text inside an HTML response, HTML special characters should be escaped so the title is displayed as text rather than interpreted as HTML markup.</p>
+</section>
+
+<section id="compile">
+<h2>12. Compile the Final Application</h2>
+
+<p>Open Command Prompt in:</p>
+<pre><code>C:\Sapir_JavaCourse_14\ServletJdbcTodo</code></pre>
+
+<h3>12.1 Create output folder</h3>
+<pre><code>mkdir WEB-INF\classes</code></pre>
+
+<h3>12.2 Compile</h3>
+<pre><code>javac ^
+  -cp "C:\Sapir_JavaCourse_14\Dependencies\apache-tomcat-10.1.59\lib\servlet-api.jar;lib/*" ^
+  -d WEB-INF\classes ^
+  src\demo\DatabaseConnection.java ^
+  src\demo\TodoServlet.java</code></pre>
+
+<p>One-line form:</p>
+<pre><code>javac -cp "C:\Sapir_JavaCourse_14\Dependencies\apache-tomcat-10.1.59\lib\servlet-api.jar;lib/*" -d WEB-INF\classes src\demo\DatabaseConnection.java src\demo\TodoServlet.java</code></pre>
+
+<h3>12.3 Verify output</h3>
+<pre><code>WEB-INF\classes\demo\DatabaseConnection.class
+WEB-INF\classes\demo\TodoServlet.class</code></pre>
+
+<div class="note">The source says <code>package demo;</code>, so compiled classes appear under a matching <code>demo</code> directory.</div>
+</section>
+
+<section id="deploy">
+<h2>13. Deploy to Tomcat</h2>
+
+<h3>13.1 Runtime structure</h3>
+<p>The deployed application must look like this:</p>
+<pre><code>...\webapps\ServletJdbcTodo\
+├── index.html
+└── WEB-INF\
+    ├── classes\
+    │   └── demo\
+    │       ├── DatabaseConnection.class
+    │       └── TodoServlet.class
+    └── lib\
+        └── mysql-connector-j-....jar</code></pre>
+
+<h3>13.2 Optional index.html</h3>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;To-Do App&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Servlet JDBC To-Do Demo&lt;/h1&gt;
+    &lt;p&gt;&lt;a href="todo"&gt;Open To-Do List&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<h3>13.3 Restart Tomcat</h3>
+<p>Use the same batch-file practice from the Tomcat installation section:</p>
+
+<pre><code>set "CATALINA_HOME=C:\Sapir_JavaCourse_14\Dependencies\apache-tomcat-10.1.59"
+
+call "%CATALINA_HOME%\bin\shutdown.bat"
+
+call "%CATALINA_HOME%\bin\startup.bat"</code></pre>
+
+<p>It is convenient to keep these commands in <code>restart_tomcat.bat</code> and run that file whenever you redeploy compiled Servlet classes.</p>
+
+<h3>13.4 Open the application</h3>
+<pre><code>http://localhost:8080/ServletJdbcTodo/todo</code></pre>
+
+<p>The URL has three main pieces:</p>
+<pre><code>http://localhost:8080
+        /ServletJdbcTodo
+        /todo
+
+server  + context path + servlet mapping</code></pre>
+</section>
+
+<section id="flow">
+<h2>14. Understand the Full Request Flow</h2>
+
+<h3>14.1 Display tasks - GET</h3>
+<ol>
+<li>The browser requests <code>GET /ServletJdbcTodo/todo</code>.</li>
+<li>Tomcat matches <code>/todo</code> to <code>@WebServlet("/todo")</code>.</li>
+<li>Tomcat calls <code>TodoServlet.doGet()</code>.</li>
+<li>The Servlet calls <code>DatabaseConnection.getConnection()</code>.</li>
+<li>JDBC opens a connection to MySQL.</li>
+<li>The Servlet runs the SELECT query.</li>
+<li>JDBC returns a <code>ResultSet</code>.</li>
+<li>The Servlet loops over the rows and writes HTML.</li>
+<li>Tomcat sends the HTTP response.</li>
+<li>The browser renders the HTML page.</li>
+</ol>
+
+<h3>14.2 Add a task - POST</h3>
+<ol>
+<li>The user enters a title and clicks Add.</li>
+<li>The browser sends a POST request with <code>action=add</code> and <code>title=...</code>.</li>
+<li>Tomcat calls <code>doPost()</code>.</li>
+<li>The Servlet reads request parameters.</li>
+<li>The Servlet executes an INSERT with <code>PreparedStatement</code>.</li>
+<li>The Servlet calls <code>sendRedirect()</code>.</li>
+<li>The browser sends a fresh GET request.</li>
+<li>The new task appears.</li>
+</ol>
+
+<h3>14.3 Post/Redirect/Get</h3>
+<p>Redirecting after a successful POST prevents browser refresh from accidentally repeating the previous insert/update/delete operation.</p>
+
+<h3>14.4 What each technology is responsible for</h3>
+<table>
+<tr><th>Technology</th><th>Responsibility</th></tr>
+<tr><td>HTML/CSS</td><td>Page structure, forms and presentation.</td></tr>
+<tr><td>HTTP</td><td>Communication between browser and server.</td></tr>
+<tr><td>Tomcat</td><td>Web server / Servlet container.</td></tr>
+<tr><td>Servlet</td><td>Receives HTTP requests and creates HTTP responses.</td></tr>
+<tr><td>JDBC</td><td>Java API for communicating with the database.</td></tr>
+<tr><td>MySQL Connector/J</td><td>JDBC driver that implements MySQL communication.</td></tr>
+<tr><td>MySQL</td><td>Persistent storage for the tasks.</td></tr>
+</table>
+</section>
+
+<section>
+<h2>15. Test the Application</h2>
+<ol>
+<li>Open <code>http://localhost:8080/ServletJdbcTodo/todo</code>.</li>
+<li>Confirm the sample rows from MySQL are visible.</li>
+<li>Add <strong>Learn PreparedStatement</strong>.</li>
+<li>Run <code>SELECT * FROM todo ORDER BY id DESC;</code> in MySQL and verify the row exists.</li>
+<li>Click <strong>Done</strong>; verify the task becomes crossed out.</li>
+<li>Click <strong>Undo</strong>; verify it returns to active state.</li>
+<li>Click <strong>Delete</strong>; verify it disappears from the page and the database.</li>
+</ol>
+</section>
+
+<section id="troubleshoot">
+<h2>16. Troubleshooting</h2>
+
+<h3><code>package jakarta.servlet does not exist</code></h3>
+<p>The Servlet API is missing from the compiler classpath. Include:</p>
+<pre><code>...\apache-tomcat-10.1.59\lib\servlet-api.jar</code></pre>
+
+<h3>HTTP 404</h3>
+<ul>
+<li>Verify the app is under Tomcat <code>webapps</code>.</li>
+<li>Verify <code>TodoServlet.class</code> is under <code>WEB-INF\classes\demo</code>.</li>
+<li>Verify the annotation says <code>@WebServlet("/todo")</code>.</li>
+<li>Verify the URL is <code>/ServletJdbcTodo/todo</code>.</li>
+</ul>
+
+<h3>HTTP 500</h3>
+<p>The Servlet was found, but code failed while running. Read the Tomcat console and files under the <code>logs</code> directory.</p>
+
+<h3><code>No suitable driver found</code></h3>
+<p>Make sure the MySQL Connector JAR is in:</p>
+<pre><code>WEB-INF\lib\mysql-connector-j-....jar</code></pre>
+
+<h3><code>Access denied for user</code></h3>
+<p>Check the MySQL username, password, host and privileges.</p>
+
+<h3><code>Unknown database 'to_do_list'</code></h3>
+<p>Create the database or correct the JDBC URL.</p>
+
+<h3><code>Communications link failure</code></h3>
+<p>Verify the MySQL service is running and the server/port are correct.</p>
+
+<h3>Old code still appears after compiling</h3>
+<p>Compilation changes the project copy of the <code>.class</code> files. Make sure the newly compiled files are also the ones inside the deployed <code>webapps\ServletJdbcTodo\WEB-INF\classes</code> folder. During a first manual tutorial, restarting Tomcat after redeployment removes ambiguity.</p>
+</section>
+
+<section id="exercise">
+<h2>17. Student Exercises</h2>
+<ol>
+<li>Add a <code>description</code> column to the table and page.</li>
+<li>Add a <code>due_date DATE</code> column.</li>
+<li>Add filters for All / Active / Completed.</li>
+<li>Add an Edit action for the task title.</li>
+<li>Validate title length on both HTML and server side.</li>
+<li>Create a <code>Todo</code> Java model class.</li>
+<li>Move SQL methods to a <code>TodoDao</code> class.</li>
+<li>Move CSS to a static <code>styles.css</code> file.</li>
+</ol>
+
+<h3>Natural next architecture</h3>
+<pre><code>Browser
+   |
+   v
+TodoServlet
+   |
+   v
+TodoDao
+   |
+   v
+DatabaseConnection
+   |
+   v
+MySQL</code></pre>
+
+<p>This is a good next step because it introduces cleaner object-oriented design without introducing Spring, JSP or another framework.</p>
+</section>
+
+
+<section id="github-final">
+<h2>18. Create a GitHub Account and Upload the Final ToDoList Project</h2>
+
+<p>This chapter shows the complete process: create a GitHub account, create a repository, prepare the project with Git, and upload the final JDBC Servlet To-Do List project.</p>
+
+<h3>18.1 Create a GitHub account</h3>
+<ol>
+<li>Open <code>https://github.com</code> in your browser.</li>
+<li>Click <strong>Sign up</strong>.</li>
+<li>Enter your email address.</li>
+<li>Create a password.</li>
+<li>Choose a GitHub username.</li>
+<li>Complete the verification process.</li>
+<li>Confirm your email address from the verification message GitHub sends you.</li>
+</ol>
+
+<div class="note"><strong>Choose your username carefully.</strong> Your repositories will normally appear under an address such as <code>https://github.com/your-user-name/...</code>.</div>
+
+<h3>18.2 Install Git on Windows</h3>
+<p>If Git is not already installed, download and install Git for Windows.</p>
+
+<p>After installation, open a new Command Prompt and check:</p>
+<pre><code>git --version</code></pre>
+
+<p>You should see a Git version number.</p>
+
+<h3>18.3 Configure your Git identity</h3>
+<p>This information is stored with your commits.</p>
+
+<pre><code>git config --global user.name "Your Name"
+git config --global user.email "your-email@example.com"</code></pre>
+
+<p>Verify the configuration:</p>
+
+<pre><code>git config --global user.name
+git config --global user.email</code></pre>
+
+<h3>18.4 Create a new GitHub repository</h3>
+<ol>
+<li>Sign in to GitHub.</li>
+<li>Click the <strong>+</strong> button in the upper-right area.</li>
+<li>Select <strong>New repository</strong>.</li>
+<li>Repository name suggestion:
+<pre><code>TodoList-JDBC-Servlet</code></pre>
+</li>
+<li>Add a description, for example:
+<pre><code>Simple Java 21 To-Do List using MySQL, JDBC, Tomcat and Servlets</code></pre>
+</li>
+<li>Choose <strong>Public</strong> if you want the instructor and other students to be able to view it easily.</li>
+<li>For this tutorial, leave <strong>Add a README</strong>, <strong>.gitignore</strong>, and <strong>license</strong> unchecked because the local project already exists.</li>
+<li>Click <strong>Create repository</strong>.</li>
+</ol>
+
+<h3>18.5 Prepare a .gitignore file</h3>
+<p>Your repository should contain source code and project files, but not large third-party dependencies or generated files.</p>
+
+<p>Create a file named:</p>
+<pre><code>.gitignore</code></pre>
+
+<p>Place it in the root of the final project:</p>
+<pre><code>C:\Sapir_JavaCourse_14\ServletJdbcTodo\.gitignore</code></pre>
+
+<p>Recommended content:</p>
+
+<pre><code># Java compiled files
+*.class
+out/
+
+# Local libraries / downloaded JAR files
+lib/*.jar
+WEB-INF/lib/*.jar
+
+# Tomcat / dependencies
+Dependencies/
+apache-tomcat-*/
+
+# VS Code
+.vscode/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log</code></pre>
+
+<div class="warning"><strong>Important:</strong> Do not upload your entire Tomcat installation or Java JDK into the project repository. Those are dependencies that students can download separately.</div>
+
+<h3>18.6 Optional README.md</h3>
+<p>Create <code>README.md</code> in the project root. Example:</p>
+
+<pre><code># TodoList JDBC Servlet
+
+A simple Java 21 web application using:
+
+- Java 21
+- Apache Tomcat 10.1
+- Jakarta Servlets
+- JDBC
+- MySQL
+- HTML/CSS
+
+## Features
+
+- View tasks
+- Add task
+- Mark task as completed
+- Undo completed task
+- Delete task
+
+## Database
+
+Create a MySQL schema named:
+
+to_do_list
+
+Then create the todo table using the SQL script from the course tutorial.
+
+## Run
+
+Deploy the project to Tomcat and open:
+
+http://localhost:8080/ServletJdbcTodo/todo
+</code></pre>
+
+<h3>18.7 Initialize Git inside the project</h3>
+<p>Open Command Prompt:</p>
+
+<pre><code>cd C:\Sapir_JavaCourse_14\ServletJdbcTodo</code></pre>
+
+<p>Initialize a Git repository:</p>
+
+<pre><code>git init</code></pre>
+
+<p>Check which files Git sees:</p>
+
+<pre><code>git status</code></pre>
+
+<h3>18.8 Add the project files</h3>
+<pre><code>git add .</code></pre>
+
+<p>Check again:</p>
+
+<pre><code>git status</code></pre>
+
+<p>You should see the source files, HTML files, <code>.gitignore</code> and README ready to be committed.</p>
+
+<h3>18.9 Create the first commit</h3>
+<pre><code>git commit -m "Initial TodoList JDBC Servlet project"</code></pre>
+
+<h3>18.10 Connect the local project to GitHub</h3>
+<p>GitHub shows the repository URL after you create the repository. It will look similar to:</p>
+
+<pre><code>https://github.com/YOUR_USERNAME/TodoList-JDBC-Servlet.git</code></pre>
+
+<p>Add it as the remote named <code>origin</code>:</p>
+
+<pre><code>git remote add origin https://github.com/YOUR_USERNAME/TodoList-JDBC-Servlet.git</code></pre>
+
+<p>Verify:</p>
+
+<pre><code>git remote -v</code></pre>
+
+<h3>18.11 Rename the branch to main</h3>
+<pre><code>git branch -M main</code></pre>
+
+<h3>18.12 Push the project to GitHub</h3>
+<pre><code>git push -u origin main</code></pre>
+
+<h3>18.13 GitHub authentication</h3>
+<p>GitHub no longer accepts your normal account password for command-line Git operations over HTTPS.</p>
+
+<p>When authentication is requested, the recommended approach is usually to sign in through the browser or use Git Credential Manager. If Git opens a browser login window:</p>
+<ol>
+<li>Sign in to GitHub.</li>
+<li>Authorize Git Credential Manager if requested.</li>
+<li>Return to the terminal.</li>
+<li>The push should continue automatically.</li>
+</ol>
+
+<div class="warning"><strong>If you see:</strong></div>
+<pre><code>remote: Invalid username or token.
+Password authentication is not supported for Git operations.</code></pre>
+
+<p>Do not enter your normal GitHub password. Use browser authentication, Git Credential Manager, or a Personal Access Token.</p>
+
+<h3>18.14 Personal Access Token - alternative method</h3>
+<p>If browser authentication is not available, create a GitHub Personal Access Token and use that token instead of your password.</p>
+
+<ol>
+<li>Open GitHub.</li>
+<li>Open <strong>Settings</strong>.</li>
+<li>Open <strong>Developer settings</strong>.</li>
+<li>Open <strong>Personal access tokens</strong>.</li>
+<li>Create a token with permission to access repositories.</li>
+<li>Copy the token immediately and store it securely.</li>
+</ol>
+
+<p>When Git asks for credentials:</p>
+<pre><code>Username: YOUR_GITHUB_USERNAME
+Password: YOUR_PERSONAL_ACCESS_TOKEN</code></pre>
+
+<div class="warning"><strong>Never upload a Personal Access Token to GitHub, put it in Java source code, or share it with students.</strong></div>
+
+<h3>18.15 Verify the upload</h3>
+<p>Refresh the GitHub repository page. You should see files such as:</p>
+
+<pre><code>src/
+    demo/
+        DatabaseConnection.java
+        TodoServlet.java
+
+WEB-INF/
+README.md
+.gitignore
+index.html</code></pre>
+
+<p>The downloaded MySQL Connector JAR and compiled <code>.class</code> files should normally be excluded by <code>.gitignore</code>.</p>
+
+<h3>18.16 Future updates</h3>
+<p>After changing your project, use this normal Git workflow:</p>
+
+<pre><code>git status
+git add .
+git commit -m "Describe the changes"
+git push</code></pre>
+
+<h3>18.17 Example workflow after adding a new feature</h3>
+<pre><code>cd C:\Sapir_JavaCourse_14\ServletJdbcTodo
+
+git status
+
+git add .
+
+git commit -m "Add due date support"
+
+git push</code></pre>
+
+<h3>18.18 Useful Git commands</h3>
+<table>
+<tr><th>Command</th><th>Purpose</th></tr>
+<tr><td><code>git status</code></td><td>Shows modified, new and staged files.</td></tr>
+<tr><td><code>git add .</code></td><td>Stages all changes for the next commit.</td></tr>
+<tr><td><code>git commit -m "message"</code></td><td>Creates a local saved version.</td></tr>
+<tr><td><code>git log --oneline</code></td><td>Shows commit history.</td></tr>
+<tr><td><code>git remote -v</code></td><td>Shows the connected GitHub repository.</td></tr>
+<tr><td><code>git push</code></td><td>Uploads local commits to GitHub.</td></tr>
+<tr><td><code>git pull</code></td><td>Downloads and merges remote changes.</td></tr>
+</table>
+
+<div class="success"><strong>Final course task:</strong> Upload the completed <code>ServletJdbcTodo</code> project to your GitHub repository and submit the repository link.</div>
+</section>
+
+<section>
+<h2>19. Final Checklist</h2>
+<table>
+<tr><th>Item</th><th>Check</th></tr>
+<tr><td>Java 21 installed and <code>java -version</code> works</td><td>□</td></tr>
+<tr><td>VS Code Java extensions installed</td><td>□</td></tr>
+<tr><td>Repository downloaded</td><td>□</td></tr>
+<tr><td>JdbcDemo connects to MySQL</td><td>□</td></tr>
+<tr><td>Tomcat opens on port 8080</td><td>□</td></tr>
+<tr><td>ServletDemo works</td><td>□</td></tr>
+<tr><td><code>to_do_list</code> database created</td><td>□</td></tr>
+<tr><td><code>todo</code> table created</td><td>□</td></tr>
+<tr><td>Connector/J is in <code>WEB-INF/lib</code></td><td>□</td></tr>
+<tr><td>Classes compile into <code>WEB-INF/classes</code></td><td>□</td></tr>
+<tr><td>Final app is deployed under <code>webapps</code></td><td>□</td></tr>
+<tr><td>Add / Done / Undo / Delete all work</td><td>□</td></tr>
+</table>
+</section>
+
+<p class="footer">Course tutorial target: Java 21 + MySQL + JDBC + Apache Tomcat 10.1 + Jakarta Servlets + HTML/CSS.</p>
+</main>
+</body>
+</html>
